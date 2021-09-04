@@ -1,7 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+const { ModuleFederationPlugin } = require("webpack").container;
+
+const port = process.env.PORT || 3000;
 
 module.exports = {
 	context: __dirname,
@@ -24,6 +27,34 @@ module.exports = {
 				use: ["style-loader", "css-loader"]
 			},
 			{
+				test: /\.less$/,
+				use: [
+					{
+						loader: "style-loader"
+					},
+					{
+						loader: "css-loader"
+					},
+					{
+						loader: "less-loader",
+						options: {
+							lessOptions: {
+								modifyVars: {
+									// hack: `true; @import "${path.resolve(
+									// 	__dirname,
+									// 	"theme.less"
+									// )}"`
+									"primary-color": "#494097",
+									"font-family":
+										"Source Sans Pro -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+								},
+								javascriptEnabled: true
+							}
+						}
+					}
+				]
+			},
+			{
 				test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
 				type: "asset/resource"
 			}
@@ -34,12 +65,14 @@ module.exports = {
 	// Where files should be sent once they are bundled
 	output: {
 		path: path.join(__dirname, "/dist"),
-		filename: "index.bundle.js"
+		filename: "index.bundle.js",
+		clean: true
 	},
 	// webpack 5 comes with devServer which loads in development mode
 	devServer: {
-		port: 3000,
-		hot: true
+		port: port,
+		hot: true,
+		historyApiFallback: true
 	},
 	// HtmlWebpackPlugin ensures webpack knows which html file template to follow
 	plugins: [
@@ -49,11 +82,15 @@ module.exports = {
 			favicon: "./public/favicon.ico",
 			manifest: "./public/manifest.json"
 		}),
-		new FaviconsWebpackPlugin({
-			logo: "./public/logo512.png",
-			mode: "webapp",
-			manifest: "./public/manifest.json"
-		}),
-		new ESLintPlugin()
+		new ESLintPlugin(),
+		new Dotenv(),
+		new ModuleFederationPlugin({
+			name: "react-webpack",
+			library: { type: "var", name: "react-webpack" },
+			filename: "remoteEntry.js",
+			remotes: {},
+			exposes: {},
+			shared: ["react", "react-dom", "react-router-dom"]
+		})
 	]
 };

@@ -1,24 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 import "./App.css";
-import "./styles/output.css"
+import "./styles/output.css";
+import "antd/dist/antd.less";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import PageNotFound from "./pages/PageNotFound";
 
-class App extends Component {
-	render() {
-		return (
-			<div className="bg-gray-900 p-20 h-screen flex justify-center items-start flex-col">
-				<h1 className="text-5xl text-white">Hello Tailwind 👋</h1>
-				<p className="text-gray-400 mt-5 text-lg">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit.
-					Fugit consequuntur odio aut nobis ab quis? Reiciendis
-					doloremque ut quo fugiat eveniet tempora, atque alias earum
-					ullam inventore itaque sapiente iste?
-				</p>
-				<button className="p-4 bg-green-600 rounded-lg font-bold text-white mt-5 hover:bg-gray-600">
-					Hello Friends 🚀
-				</button>
+// import { Button, DatePicker, version } from "antd";
+
+const App = () => {
+	return (
+		<Router>
+			<div
+				style={{
+					width: 100 + "vw",
+					height: 80,
+					backgroundColor: "lightblue"
+				}}
+			>
+				<Link to="/">Home</Link>
+				<Link to="/login">Login</Link>
 			</div>
-		);
-	}
-}
+			<Switch>
+				<Route path="/" exact component={Home} />
+				<Route path="/login" exact component={Login} />
+				<Route path="*" component={PageNotFound} />
+			</Switch>
+		</Router>
+	);
+};
 
 export default App;
