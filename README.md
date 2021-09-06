@@ -182,6 +182,16 @@ Create `.eslintrc.json` file
 }
 ```
 
+### 5. Set up `.env` file
+
+Create a `.env` file, can reference the `.env.example` file
+
+```
+# EXAMPLE OF .env file
+NODE_ENV=development
+PORT=8080
+```
+
 ---
 
 ## App 1
@@ -192,15 +202,19 @@ Create `.eslintrc.json` file
 
 ```javascript
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+
+const port = process.env.PORT || 8080;
 
 const deps = require("./package.json").dependencies;
 module.exports = {
 	mode: "development",
 	entry: "./src/index",
 	output: {
-		publicPath: "http://localhost:8080/"
+		publicPath: `http://localhost:${port}/`
 	},
 
 	resolve: {
@@ -208,7 +222,7 @@ module.exports = {
 	},
 
 	devServer: {
-		port: 8080
+		port: port
 	},
 
 	module: {
@@ -230,10 +244,6 @@ module.exports = {
 				use: {
 					loader: "babel-loader"
 				}
-			},
-			{
-				test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
-				type: "asset/resource"
 			},
 			{
 				test: /\.less$/,
@@ -262,19 +272,28 @@ module.exports = {
 						}
 					}
 				]
+			},
+			{
+				test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+				type: "asset/resource",
+				generator: {
+					filename: "[name][ext][query]"
+				}
 			}
 		]
 	},
 
 	plugins: [
 		new ModuleFederationPlugin({
-			name: "app1", // name has to match node_modules name
+			name: "app1",
 			library: { type: "var", name: "app1" },
 			filename: "remoteEntry.js",
 			remotes: {
 				app2: "app2"
 			},
-			exposes: {},
+			exposes: {
+				"./Navigation": "./src/components/NavigationComponent"
+			},
 			shared: {
 				...deps,
 				react: {
@@ -294,7 +313,8 @@ module.exports = {
 			manifest: "./public/manifest.json"
 		}),
 		new FaviconsWebpackPlugin("./src/logo.svg"),
-		new ESLintPlugin()
+		new ESLintPlugin(),
+		new Dotenv()
 	]
 };
 ```
@@ -529,13 +549,16 @@ export default Navigation;
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+
+const port = process.env.PORT || 8081;
 
 const deps = require("./package.json").dependencies;
 module.exports = {
 	mode: "development",
 	entry: "./src/index",
 	output: {
-		publicPath: "http://localhost:8081/"
+		publicPath: `http://localhost:${port}/`
 	},
 
 	resolve: {
@@ -543,7 +566,7 @@ module.exports = {
 	},
 
 	devServer: {
-		port: 8081
+		port: port
 	},
 
 	module: {
@@ -627,7 +650,8 @@ module.exports = {
 		new HtmlWebPackPlugin({
 			template: "./public/index.html"
 		}),
-		new ESLintPlugin()
+		new ESLintPlugin(),
+		new Dotenv()
 	]
 };
 ```
