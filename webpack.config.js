@@ -109,7 +109,30 @@ module.exports = {
 			favicon: "./public/favicon.ico",
 			manifest: "./public/manifest.json"
 		}),
-		new FaviconsWebpackPlugin("./src/logo.svg"),
+		new FaviconsWebpackPlugin({
+			logo: "./src/logo.svg", // svg works too!
+			mode: "webapp", // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
+			devMode: "webapp", // optional can be 'webapp' or 'light' - 'light' by default,
+			cache: true,
+			favicons: {
+				appName: "app1",
+				appDescription: "App 1",
+				developerName: "chowzzzz",
+				developerURL: null, // prevent retrieving from the nearest package.json
+				background: "#fff",
+				theme_color: "#494097",
+				icons: {
+					android: false, // Create Android homescreen icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					appleIcon: false, // Create Apple touch icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					appleStartup: false, // Create Apple startup images. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					coast: false, // Create Opera Coast icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					favicons: true, // Create regular favicons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					firefox: true, // Create Firefox OS icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					windows: true, // Create Windows 8 tile icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+					yandex: false // Create Yandex browser icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+				}
+			}
+		}),
 		new ESLintPlugin(),
 		new Dotenv()
 	]
