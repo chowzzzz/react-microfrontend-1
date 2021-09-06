@@ -134,10 +134,26 @@ npx tailwindcss init --full
 npx tailwindcss init tailwindcss-config.js -p
 ```
 
-Import Tailwind CSS to `App.js`
+Import Tailwind CSS to `App.js` for usage
 
 ```
 import './styles/output.css'
+```
+
+Custom font family:
+
+##### Reference: https://tailwindcss.com/docs/font-family
+
+```javascript
+module.exports = {
+    theme: {
+      fontFamily: {
++      'sans': ['OpenSans', 'ui-sans-serif', 'system-ui', ...],
+       'serif': ['ui-serif', 'Georgia', ...],
+       'mono': ['ui-monospace', 'SFMono-Regular', ...]
+      }
+    }
+  }
 ```
 
 ### 4. Set up ESLint and Favicons
@@ -463,28 +479,7 @@ export default App;
 
 ```css
 .App {
-    margin: 1rem;
     font-family: Open Sans;
-}
-
-h1 {
-    font-family: Open Sans;
-    font-weight: 800 !important;
-}
-
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: Open Sans;
-    font-weight: 700 !important;
-}
-
-navbar {
-    width: 100 + "vw";
-    height: 80;
-    background-color: "lightblue";
 }
 ```
 
