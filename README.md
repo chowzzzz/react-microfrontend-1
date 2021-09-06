@@ -75,12 +75,8 @@ This is the template of the final folder structure.
 
 ```
 npm init -y
-npm i react react-dom react-router-dom
-npm i -D @babel/cli @babel/core @babel/preset-env @babel/preset-react babel-loader babel-plugin-import file-loader css-loader style-loader webpack webpack-cli html-webpack-plugin webpack-dev-server
-
-npm i redux react-redux antd @reduxjs/toolkit
-
-npm i -D less less-loader
+npm i react react-dom react-router-dom redux react-redux antd @reduxjs/toolkit
+npm i -D @babel/cli @babel/core @babel/preset-env @babel/preset-react babel-loader babel-plugin-import file-loader css-loader style-loader webpack webpack-cli html-webpack-plugin webpack-dev-server less less-loader postcss postcss-cli tailwindcss autoprefixer eslint eslint-plugin-react eslint-plugin-react-hooks eslint-webpack-plugin favicons favicons-webpack-plugin@5.0.0 dotenv-webpack
 ```
 
 Add scripts to package.json
@@ -117,10 +113,6 @@ Add scripts to package.json
 
 ### 3. Set up Tailwind CSS
 
-```
-npm i -D postcss postcss-cli tailwindcss autoprefixer
-```
-
 Create `styles` folder in the `src` folder
 
     |── src
@@ -148,10 +140,6 @@ import './styles/output.css'
 ```
 
 ### 4. Set up ESLint and Favicons
-
-```
-npm i -D eslint eslint-plugin-react eslint-plugin-react-hooks eslint-webpack-plugin favicons favicons-webpack-plugin@5.0.0
-```
 
 Create `.eslintrc.json` file
 
