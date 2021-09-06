@@ -1,30 +1,43 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
-const { ModuleFederationPlugin } = require("webpack").container;
 
-const port = process.env.PORT || 3000;
-
+const deps = require("./package.json").dependencies;
 module.exports = {
-	context: __dirname,
-	entry: "./src/index.js",
 	mode: "development",
-	// Rules of how webpack will take our files, complie & bundle them for the browser
+	entry: "./src/index",
+	output: {
+		publicPath: "http://localhost:8080/"
+	},
+
+	resolve: {
+		extensions: [".jsx", ".js", ".json"]
+	},
+
+	devServer: {
+		port: 8080
+	},
+
 	module: {
 		rules: [
 			{
-				// Extension of files which needs to be targetted by the specific loader, here is babel-loader
+				test: /\.m?js/,
+				type: "javascript/auto",
+				resolve: {
+					fullySpecified: false
+				}
+			},
+			{
+				test: /\.css$/i,
+				use: ["style-loader", "css-loader"]
+			},
+			{
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				use: {
 					loader: "babel-loader"
 				}
-			},
-			{
-				test: /\.css$/,
-				// Needs to be in this order, css-loader turns css to js files, style-loader extracts css into files as string
-				use: ["style-loader", "css-loader"]
 			},
 			{
 				test: /\.less$/,
@@ -56,41 +69,44 @@ module.exports = {
 			},
 			{
 				test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
-				type: "asset/resource"
+				type: "asset/resource",
+				generator: {
+					filename: "[name][ext][query]"
+				}
 			}
 		]
 	},
-	// Extensions that Webpack will resolve - import modules without needing to add their extensions
-	// resolve: { extensions: ["*", ".js", ".jsx"] },
-	// Where files should be sent once they are bundled
-	output: {
-		path: path.join(__dirname, "/dist"),
-		filename: "index.bundle.js",
-		clean: true
-	},
-	// webpack 5 comes with devServer which loads in development mode
-	devServer: {
-		port: port,
-		hot: true,
-		historyApiFallback: true
-	},
-	// HtmlWebpackPlugin ensures webpack knows which html file template to follow
+
 	plugins: [
-		new HtmlWebpackPlugin({
+		new ModuleFederationPlugin({
+			name: "app1",
+			library: { type: "var", name: "app1" },
+			filename: "remoteEntry.js",
+			remotes: {
+				app2: "app2"
+			},
+			exposes: {
+				"./Navigation": "./src/components/NavigationComponent"
+			},
+			shared: {
+				...deps,
+				react: {
+					singleton: true,
+					requiredVersion: deps.react
+				},
+				"react-dom": {
+					singleton: true,
+					requiredVersion: deps["react-dom"]
+				}
+			}
+		}),
+		new HtmlWebPackPlugin({
 			template: "./public/index.html",
 			filename: "./index.html",
 			favicon: "./public/favicon.ico",
 			manifest: "./public/manifest.json"
 		}),
-		new ESLintPlugin(),
-		new Dotenv(),
-		new ModuleFederationPlugin({
-			name: "react-webpack",
-			library: { type: "var", name: "react-webpack" },
-			filename: "remoteEntry.js",
-			remotes: {},
-			exposes: {},
-			shared: ["react", "react-dom", "react-router-dom"]
-		})
+		new FaviconsWebpackPlugin("./src/logo.svg"),
+		new ESLintPlugin()
 	]
 };

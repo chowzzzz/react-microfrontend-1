@@ -6,7 +6,7 @@
 			{
 				"libraryName": "antd",
 				"libraryDirectory": "es",
-				"style": true // or "css"
+				"style": true
 			}
 		]
 	]
