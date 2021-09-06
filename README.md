@@ -140,7 +140,7 @@ Import Tailwind CSS to `App.js` for usage
 import './styles/output.css'
 ```
 
-Custom font family:
+Custom font family in `tailwind.config.js`:
 
 ##### Reference: https://tailwindcss.com/docs/font-family
 
