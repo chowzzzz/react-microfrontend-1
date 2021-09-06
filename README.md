@@ -76,7 +76,7 @@ This is the template of the final folder structure.
 ```
 npm init -y
 npm i react react-dom react-router-dom redux react-redux antd @reduxjs/toolkit
-npm i -D @babel/cli @babel/core @babel/preset-env @babel/preset-react babel-loader babel-plugin-import file-loader css-loader style-loader webpack webpack-cli html-webpack-plugin webpack-dev-server less less-loader postcss postcss-cli tailwindcss autoprefixer eslint eslint-plugin-react eslint-plugin-react-hooks eslint-webpack-plugin favicons favicons-webpack-plugin@5.0.0
+npm i -D @babel/cli @babel/core @babel/preset-env @babel/preset-react babel-loader babel-plugin-import file-loader css-loader style-loader webpack webpack-cli html-webpack-plugin webpack-dev-server less less-loader postcss postcss-cli tailwindcss autoprefixer eslint eslint-plugin-react eslint-plugin-react-hooks eslint-webpack-plugin favicons favicons-webpack-plugin@5.0.0 dotenv-webpack
 npm i -D -E prettier
 ```
 
